@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import me.dio.sdw2024.domain.model.Champions;
+import me.dio.sdw2024.domain.model.Champion;
 import me.dio.sdw2024.domain.ports.ChampionsRepository;
 
 @Repository
@@ -15,11 +15,11 @@ public class ChampionsJDBCRepository implements ChampionsRepository {
 
   // fornece uso ao database
   private final JdbcTemplate jdbcTemplate;
-  private final RowMapper<Champions> rowMapper;
+  private final RowMapper<Champion> rowMapper;
 
   public ChampionsJDBCRepository(JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
-    this.rowMapper = (rs, rowNum) -> new Champions(
+    this.rowMapper = (rs, rowNum) -> new Champion(
         rs.getLong("id"),
         rs.getString("name"),
         rs.getString("role"),
@@ -29,15 +29,15 @@ public class ChampionsJDBCRepository implements ChampionsRepository {
 
   @SuppressWarnings("null")
   @Override
-  public List<Champions> findAll() {
+  public List<Champion> findAll() {
     return jdbcTemplate.query("SELECT * FROM CHAMPIONS", rowMapper);
   }
 
   @Override
-  public Optional<Champions> findById(Long id) {
+  public Optional<Champion> findById(Long id) {
     String sql = "SELECT * FROM CHAMPIONS WHERE ID = ?";
     @SuppressWarnings("null")
-    Champions champions = jdbcTemplate.queryForObject(sql, rowMapper, id);
-    return Optional.ofNullable(champions);
+    List<Champion> champions = jdbcTemplate.query(sql, rowMapper, id);
+    return champions.stream().findFirst();
   }
 }

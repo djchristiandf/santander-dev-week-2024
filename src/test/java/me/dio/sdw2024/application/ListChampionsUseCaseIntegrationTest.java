@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import me.dio.sdw2024.domain.model.Champions;
+import me.dio.sdw2024.domain.model.Champion;
 
 @SpringBootTest
 public class ListChampionsUseCaseIntegrationTest {
@@ -17,10 +17,10 @@ public class ListChampionsUseCaseIntegrationTest {
 
   @Test
   public void testListChampions() {
-    List<Champions> champions = listChampionsUseCase.findAll();
+    List<Champion> champions = listChampionsUseCase.findAll();
     assert !champions.isEmpty() : "The list of champions is empty";
 
-    Champions firstChampion = champions.get(0);
+    Champion firstChampion = champions.get(0);
     assert firstChampion != null : "First champion is null";
 
     Assertions.assertEquals(12, champions.size());
