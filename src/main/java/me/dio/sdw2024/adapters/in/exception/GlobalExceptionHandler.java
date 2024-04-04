@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import me.dio.sdw2024.domain.exception.ChampionNotfoundException;
 
@@ -18,13 +19,19 @@ public class GlobalExceptionHandler {
   private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
   @ExceptionHandler(ChampionNotfoundException.class)
-  public ResponseEntity<ApiError> handleDomainException(ChampionNotfoundException e) {
-    return ResponseEntity.unprocessableEntity().body(new ApiError(e.getMessage()));
+  public ResponseEntity<ApiError> handleDomainException(ChampionNotfoundException domainError) {
+    return ResponseEntity
+        .unprocessableEntity()
+        .body(new ApiError(domainError.getMessage()));
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ApiError> handleDomainException(Exception e) {
-    return ResponseEntity.internalServerError().body(new ApiError("Ops! Algo indevido aconteceu."));
+  public ResponseEntity<ApiError> handleDomainException(Exception unexpectedError) {
+    String message = "Ops! Ocorreu um erro inesperado!";
+    logger.error(message, unexpectedError);
+    return ResponseEntity
+        .internalServerError()
+        .body(new ApiError(message));
   }
 
   /*******************************************************************************
